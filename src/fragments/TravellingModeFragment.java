@@ -4,14 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.location.Location;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import bingTrafficParser.ParseTask;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import bingTrafficParser.*;
 import com.example.navigation.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -21,17 +31,10 @@ import directions.DirectionsDownloadTask;
 import directions.DirectionsMarkers;
 import directions.DirectionsParserTask;
 
-import android.location.Location;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 public class TravellingModeFragment extends SherlockMapFragment {
 
 	public static GoogleMap googleMap;
-	
+
 	String bingUrl = "http://dev.virtualearth.net/REST/v1/Traffic/Incidents/";
 	String bingKey = "AoHoD_fdpQD73-OoTNnnsGzYu5ClXmVNAGr2t-M_wKbR8TWHqKrZR1X6GHI5pzWm";
 	String url2;
@@ -137,10 +140,20 @@ public class TravellingModeFragment extends SherlockMapFragment {
 
 		handler.postDelayed(runner, random.nextInt(2000));
 
-		googleMap = getMap();
+		View view = inflater
+				.inflate(R.layout.travelling_mode, container, false);
+		FragmentManager fragmentManager = getFragmentManager();
+		SupportMapFragment supportMapFragment = (SupportMapFragment) fragmentManager
+				.findFragmentById(R.id.map);
+		googleMap = supportMapFragment.getMap();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		fragmentTransaction.commit();
+		
+		//googleMap = getMap();
 
 		markerPoints = new ArrayList<LatLng>();
-		
+
 		googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
 			@Override
 			public void onCameraChange(CameraPosition position) {
@@ -194,7 +207,6 @@ public class TravellingModeFragment extends SherlockMapFragment {
 			}
 		});
 
-
 		// Setting a click event handler for the map
 		googleMap.setOnMapClickListener(new OnMapClickListener() {
 
@@ -216,7 +228,7 @@ public class TravellingModeFragment extends SherlockMapFragment {
 			}
 		});
 
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return view;
 	}
 
 	public void toggleStyle() {

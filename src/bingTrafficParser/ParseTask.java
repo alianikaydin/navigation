@@ -1,23 +1,33 @@
 package bingTrafficParser;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.os.AsyncTask;
-
 public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 
 	GoogleMap gm;
+	public static ArrayList<LatLng> positionList = new ArrayList<LatLng>();
+	
 
 	public ParseTask(GoogleMap googleMap) {
 		gm = googleMap;
 
 	}
+
+
+	public ParseTask() {
+		// TODO Auto-generated constructor stub
+	}
+
 
 	protected JSONObject doInBackground(String... params) {
 		JSONParser jParser = new JSONParser();
@@ -26,6 +36,7 @@ public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 
 	}
 
+	
 	@Override
 	protected void onPostExecute(JSONObject jobject) {
 		String str_estimatedTotal = null;
@@ -35,6 +46,8 @@ public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 		String str_zero = null;
 		String strroadClosed = null;
 		String strroadseverity = null;
+		
+		
 
 		try {
 
@@ -108,6 +121,7 @@ public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 								if (!jobjjarrresources.isNull("point")) {
 									JSONObject jobjpoint = jobjjarrresources
 											.getJSONObject("point");
+									
 									// point
 									if (!jobjpoint.isNull("coordinates")) {
 										JSONArray jarcoordinates = jobjpoint
@@ -131,10 +145,14 @@ public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 														.get(1);
 												LatLng positionLatLng = new LatLng(
 														lat, lon);
+												
+														
+													positionList.add(positionLatLng);
 												gm.addMarker(new MarkerOptions()
 														.position(
 																positionLatLng)
 														.title(strdescription));
+												
 											}
 
 											else {

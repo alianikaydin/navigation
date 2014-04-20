@@ -31,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -127,6 +128,7 @@ public class FindNearbyPlacesFragment extends SherlockMapFragment {
 
 		googleMap = getMap();
 
+			
 		nearPlacesReference = new HashMap<String, Place>();
 		
 		googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
@@ -194,6 +196,8 @@ public class FindNearbyPlacesFragment extends SherlockMapFragment {
 				addMarker(latLng, BitmapDescriptorFactory.HUE_GREEN);
 			}
 		});
+		
+		
 
 		// Marker click listener
 		googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
