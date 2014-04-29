@@ -153,6 +153,7 @@ public class ParseTask extends AsyncTask<String, Void, JSONObject> {
 																positionLatLng)
 														.title(strdescription));
 												
+												
 											}
 
 											else {

@@ -73,7 +73,8 @@ public class DirectionsParserTask extends
 
 					// ///////////////////////////////checking whether there is
 					// a incident or not
-					for (int j = 0; j < ParseTask.positionList.size(); j++) {
+					outerloop: for (int j = 0; j < ParseTask.positionList
+							.size(); j++) {
 						for (int j2 = 0; j2 < points.size(); j2++) {
 							LatLng pos = ParseTask.positionList.get(j);
 
@@ -82,8 +83,12 @@ public class DirectionsParserTask extends
 								Toast.makeText(TabActivity.mainContext,
 										"THERE IS AN INCIDENT IN THE ROUTE",
 										Toast.LENGTH_LONG).show();
-							//Log.w("aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaa");
-							} 
+
+								break outerloop;
+
+							} else {
+								break;
+							}
 						}
 
 					}
@@ -92,7 +97,7 @@ public class DirectionsParserTask extends
 
 					// Adding all the points in the route to LineOptions
 					lineOptions.addAll(points);
-					lineOptions.width(100);
+					lineOptions.width(10);
 
 					// Changing the color polyline according to the mode
 					if (TravellingModeFragment.travelling_mode == 1)
@@ -127,45 +132,35 @@ public class DirectionsParserTask extends
 	// finds coordinates between two coordinates//////////////////
 	boolean liesOnSegment(LatLng a, LatLng b, LatLng c) {
 
+		double crossProduct = (c.longitude - b.longitude)
+				* (b.latitude - a.latitude) - (c.latitude - b.latitude)
+				* (b.longitude - a.longitude);
 		double dotProduct = (c.latitude - a.latitude)
 				* (c.latitude - b.latitude) + (c.longitude - a.longitude)
 				* (c.longitude - b.longitude);
-		if (dotProduct < (1.5)) {
+		double squaredlengthba = (b.latitude - a.latitude)
+				* (b.latitude - a.latitude) + (b.longitude - a.longitude)
+				* (b.longitude - a.longitude);
+
+		/*double distance = Math.abs(((b.longitude - a.longitude) * c.latitude)
+				+ ((a.latitude - b.latitude) * c.longitude) - b.latitude
+				* b.longitude + a.longitude * b.latitude - a.latitude
+				* b.longitude + b.latitude * b.longitude)
+				/ Math.sqrt((b.longitude - a.longitude)
+						* (b.longitude - a.longitude)
+						+ (a.latitude - b.latitude) * (a.latitude - b.latitude));
+
+		if(distance==0)
 			return true;
-		} else {
+		*/ 
+		
+		
+		if (Math.abs(crossProduct) < Math.E && dotProduct > 0
+				&& dotProduct < squaredlengthba)
+			return true;
+		else
 			return false;
-		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	// finds coordinates between two coordinates//////////////////
-	/*
-	 * public ArrayList<LatLng> getListOfIntermediatePoints(LatLng A, LatLng B)
-	 * { double m = slope(A, B); int C = (int) intercept(A, m);
-	 * 
-	 * ArrayList<LatLng> innerCoordinates = new ArrayList<LatLng>(); for (double
-	 * i = A.latitude; i <= B.latitude; i++) { double j = m * i + C; // y = mx +
-	 * c; innerCoordinates.add(new LatLng(i, (int) j)); } //Log.d("coordinates",
-	 * innerCoordinates + ""); return innerCoordinates; }
-	 * 
-	 * public double slope(LatLng a, LatLng b) { if (a.latitude == b.latitude) {
-	 * return 0; } return (b.longitude - a.longitude) / (b.latitude -
-	 * a.latitude); }
-	 * 
-	 * double intercept(LatLng A, double slope) { if (slope == 0) { // vertical
-	 * line return A.latitude; } return A.longitude - slope * A.latitude;
-	 * 
-	 * }
-	 */
-
-	// //////////////////////////////////////////////////////
 
 	public static String getDirectionsUrl(LatLng origin, LatLng dest,
 			int travelling_mode) {
